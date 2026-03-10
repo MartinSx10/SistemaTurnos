@@ -1,0 +1,80 @@
+<section class="page">
+  <div class="card">
+    <h1>Reservar Turno</h1>
+    <p>Completá el formulario para reservar tu cancha.</p>
+
+    <form (ngSubmit)="reservar()" class="formulario">
+      <div class="campo">
+        <label for="fecha">Fecha</label>
+        <input
+          type="date"
+          id="fecha"
+          name="fecha"
+          [(ngModel)]="reserva.fecha"
+          (ngModelChange)="onFechaChange()"
+          [min]="fechaMinima"
+          required
+        />
+      </div>
+
+      <div class="campo">
+        <label for="hora">Horario</label>
+        <select
+          id="hora"
+          name="hora"
+          [(ngModel)]="reserva.hora"
+          [disabled]="!reserva.fecha"
+          required
+        >
+          <option value="">
+            {{ reserva.fecha ? 'Seleccionar horario' : 'Primero elegí una fecha' }}
+          </option>
+
+          <option
+            *ngFor="let horario of horarios"
+            [value]="horario"
+            [disabled]="!estaDisponible(horario)"
+          >
+            {{ horario }} {{ !estaDisponible(horario) ? '(ocupado)' : '' }}
+          </option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          name="nombre"
+          [(ngModel)]="reserva.nombre"
+          (input)="soloLetras($event)"
+          placeholder="Tu nombre"
+          required
+        />
+      </div>
+
+      <div class="campo">
+        <label for="telefono">Teléfono</label>
+        <input
+          type="tel"
+          id="telefono"
+          name="telefono"
+          [(ngModel)]="reserva.telefono"
+           (input)="soloNumeros($event)"
+          placeholder="Tu teléfono"
+          required
+        />
+      </div>
+
+      <button type="submit">Reservar</button>
+    </form>
+
+    <p class="mensaje ok" *ngIf="mensaje">
+      {{ mensaje }}
+    </p>
+
+    <p class="mensaje error" *ngIf="error">
+      {{ error }}
+    </p>
+  </div>
+</section>

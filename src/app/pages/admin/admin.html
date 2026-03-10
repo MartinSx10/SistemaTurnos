@@ -1,0 +1,142 @@
+<section class="page">
+  <div class="card" *ngIf="!estaLogueado; else panelAdmin">
+    <h1>Acceso Administrador</h1>
+    <p>Ingresá la contraseña para acceder al panel.</p>
+
+    <form (ngSubmit)="login()" class="login-form">
+      <div class="campo-filtro">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Ingresá la contraseña"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-secundario">
+        Ingresar
+      </button>
+    </form>
+
+    <p class="error-login" *ngIf="loginError">
+      {{ loginError }}
+    </p>
+
+    <p class="hint">
+      Clave de prueba: <strong>admin123</strong>
+    </p>
+  </div>
+
+  <ng-template #panelAdmin>
+    <div class="card">
+      <div class="admin-header">
+        <div>
+          <h1>Panel Administrador</h1>
+          <p>Listado de turnos reservados.</p>
+        </div>
+
+        <button type="button" class="btn-logout" (click)="logout()">
+          Cerrar sesión
+        </button>
+      </div>
+
+      <div class="resumen">
+        <div class="resumen-card">
+          <span class="titulo">Total</span>
+          <strong>{{ totalReservas }}</strong>
+        </div>
+
+        <div class="resumen-card">
+          <span class="titulo">Reservadas</span>
+          <strong>{{ totalReservadas }}</strong>
+        </div>
+
+        <div class="resumen-card">
+          <span class="titulo">Pagadas</span>
+          <strong>{{ totalPagadas }}</strong>
+        </div>
+
+        <div class="resumen-card">
+          <span class="titulo">Canceladas</span>
+          <strong>{{ totalCanceladas }}</strong>
+        </div>
+      </div>
+
+      <div class="filtros">
+        <div class="campo-filtro">
+          <label for="filtroFecha">Filtrar por fecha</label>
+          <input
+            type="date"
+            id="filtroFecha"
+            name="filtroFecha"
+            [(ngModel)]="filtroFecha"
+          />
+        </div>
+
+        <button
+          type="button"
+          class="btn-secundario"
+          (click)="limpiarFiltro()"
+          *ngIf="filtroFecha"
+        >
+          Limpiar filtro
+        </button>
+
+        <button
+          type="button"
+          class="btn-danger"
+          (click)="limpiarTodas()"
+          *ngIf="totalReservas > 0"
+        >
+          Limpiar todas
+        </button>
+      </div>
+
+      <div *ngIf="reservas.length === 0" class="vacio">
+        No hay reservas para mostrar.
+      </div>
+
+      <div class="table-wrap" *ngIf="reservas.length > 0">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Cliente</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reserva of reservas">
+              <td>{{ reserva.fecha }}</td>
+              <td>{{ reserva.hora }}</td>
+              <td>{{ reserva.nombre }}</td>
+              <td>{{ reserva.telefono }}</td>
+              <td>
+                <select [value]="reserva.estado" (change)="cambiarEstado(reserva.id, $event)">
+                  <option value="reservado">Reservado</option>
+                  <option value="pagado">Pagado</option>
+                  <option value="cancelado">Cancelado</option>
+                </select>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn-eliminar"
+                  (click)="eliminar(reserva.id)"
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-template>
+</section>

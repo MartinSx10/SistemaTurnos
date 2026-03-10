@@ -1,0 +1,20 @@
+<nav class="navbar">
+  <div class="topbar">
+    <div class="logo">Fútbol 5 Turnos</div>
+
+    <button
+      type="button"
+      class="menu-btn"
+      (click)="toggleMenu()"
+      aria-label="Abrir menú"
+    >
+      ☰
+    </button>
+  </div>
+
+  <div class="links" [class.abierto]="menuAbierto">
+    <a routerLink="/" (click)="cerrarMenu()">Inicio</a>
+    <a routerLink="/reservas" (click)="cerrarMenu()">Reservas</a>
+    <a routerLink="/admin" (click)="cerrarMenu()">Admin</a>
+  </div>
+</nav>

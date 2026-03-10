@@ -1,1 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  color: #111827;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-bg {
+  position: fixed;
+  inset: 0;
+  background: url('assets/cancha.jpg') center center / cover no-repeat;
+  z-index: -2;
+}
+
+.app-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: -1;
+}

@@ -1,0 +1,231 @@
+.page {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 1100px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(4px);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+p {
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+
+.vacio {
+  padding: 1rem;
+  background: #f3f4f6;
+  border-radius: 8px;
+  color: #0f172a;
+}
+
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.resumen-card {
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.resumen-card .titulo {
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.resumen-card strong {
+  font-size: 1.8rem;
+  color: #0f172a;
+}
+
+.filtros {
+  display: flex;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.campo-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.campo-filtro label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.campo-filtro input {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #0f172a;
+}
+
+.btn-secundario,
+.btn-danger {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-secundario {
+  background: #475569;
+}
+
+.btn-danger {
+  background: #dc2626;
+}
+
+.btn-secundario:hover,
+.btn-danger:hover,
+.btn-eliminar:hover {
+  opacity: 0.95;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: transparent;
+  min-width: 760px;
+}
+
+th,
+td {
+  padding: 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  color: #0f172a;
+}
+
+th {
+  font-weight: 700;
+}
+
+select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #0f172a;
+}
+
+.btn-eliminar {
+  padding: 0.5rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: #dc2626;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .resumen {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+    border-radius: 14px;
+  }
+
+  h1 {
+    font-size: 1.9rem;
+    line-height: 1.2;
+  }
+
+  .resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .filtros {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .campo-filtro {
+    width: 100%;
+  }
+
+  .campo-filtro input,
+  .btn-secundario,
+  .btn-danger {
+    width: 100%;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 420px;
+}
+
+.error-login {
+  margin-top: 1rem;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.hint {
+  margin-top: 1rem;
+  color: #64748b;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-logout {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #0f172a;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  opacity: 0.95;
+}
