@@ -1,59 +1,54 @@
-# Futbol5Turnos
+# Fútbol 5 Turnos
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+Sistema web de gestión de turnos para una cancha de fútbol 5, desarrollado con Angular.
 
-## Development server
+## Descripción
 
-To start a local development server, run:
+Este proyecto permite reservar turnos, visualizar horarios disponibles y administrar reservas desde un panel de administración simple y funcional.
+
+Fue pensado como una primera versión MVP orientada a portfolio, con foco en una experiencia clara, responsive y fácil de usar.
+
+## Funcionalidades principales
+
+- Reserva de turnos por fecha y horario
+- Bloqueo de horarios ya ocupados
+- Validación de formulario
+- Panel administrador con login simple
+- Cambio de estado de reservas: reservado, pagado o cancelado
+- Filtro de reservas por fecha
+- Resumen de métricas en el panel admin
+- Persistencia local con localStorage
+- Diseño responsive para escritorio y móvil
+
+## Tecnologías utilizadas
+
+- Angular
+- TypeScript
+- SCSS
+- LocalStorage
+
+## Acceso administrador
+
+Esta primera versión incluye un acceso administrador básico pensado para demostración y pruebas.
+
+- Contraseña de prueba: `admin123`
+
+## Objetivo del proyecto
+
+Simular un sistema real de reservas para un negocio deportivo, aplicando lógica de turnos, validaciones, administración de estados y diseño responsive.
+
+## Próximas mejoras
+
+### Versión 2
+- Backend con Node.js y Express
+- Base de datos
+- Autenticación real para administrador
+- Persistencia de reservas en servidor
+- Mejoras de seguridad
+- Gestión de múltiples canchas
+
+## Instalación y ejecución
 
 ```bash
+npm install
 ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
