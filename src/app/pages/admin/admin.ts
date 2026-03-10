@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ReservasService, Reserva } from '../../services/reservas.service';
 import { AuthService } from '../../services/auth.service';
+import { ReservasApiService, Reserva } from '../../services/reservas-api.service';
 
 @Component({
   selector: 'app-admin',
@@ -11,15 +11,24 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
-export class Admin {
+export class AdminComponent implements OnInit {
   filtroFecha = '';
   password = '';
   loginError = '';
+  reservas: Reserva[] = [];
+  cargando = false;
 
   constructor(
-    public reservasService: ReservasService,
-    public authService: AuthService
+    public authService: AuthService,
+    private reservasApi: ReservasApiService,
+    private cdr: ChangeDetectorRef
   ) {}
+
+  ngOnInit(): void {
+    if (this.estaLogueado) {
+      this.cargarReservas();
+    }
+  }
 
   get estaLogueado(): boolean {
     return this.authService.isLoggedIn();
@@ -32,30 +41,20 @@ export class Admin {
 
     if (!ok) {
       this.loginError = 'Contraseña incorrecta.';
+      this.cdr.detectChanges();
       return;
     }
 
     this.password = '';
+    this.cargarReservas();
+    this.cdr.detectChanges();
   }
 
   logout(): void {
     this.authService.logout();
     this.filtroFecha = '';
-  }
-
-  get reservas(): Reserva[] {
-    const reservas = this.reservasService.getReservas();
-
-    const filtradas = !this.filtroFecha
-      ? reservas
-      : reservas.filter((reserva) => reserva.fecha === this.filtroFecha);
-
-    return [...filtradas].sort((a, b) => {
-      const fechaHoraA = `${a.fecha}T${a.hora}`;
-      const fechaHoraB = `${b.fecha}T${b.hora}`;
-
-      return new Date(fechaHoraA).getTime() - new Date(fechaHoraB).getTime();
-    });
+    this.reservas = [];
+    this.cdr.detectChanges();
   }
 
   get totalReservas(): number {
@@ -74,29 +73,72 @@ export class Admin {
     return this.reservas.filter((r) => r.estado === 'cancelado').length;
   }
 
-  eliminar(id: string): void {
-    this.reservasService.eliminarReserva(id);
+  cargarReservas(): void {
+    this.cargando = true;
+    this.cdr.detectChanges();
+
+    this.reservasApi.getReservas(this.filtroFecha || undefined).subscribe({
+      next: (data) => {
+        this.reservas = data;
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
-  cambiarEstado(id: string, event: Event): void {
+  onFiltroChange(): void {
+    this.cargarReservas();
+  }
+
+  eliminar(id: number): void {
+    this.reservasApi.eliminarReserva(id).subscribe({
+      next: () => {
+        this.cargarReservas();
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  cambiarEstado(id: number, event: Event): void {
     const select = event.target as HTMLSelectElement;
 
-    this.reservasService.cambiarEstado(
-      id,
-      select.value as 'reservado' | 'pagado' | 'cancelado'
-    );
+    this.reservasApi
+      .cambiarEstado(id, select.value as 'reservado' | 'pagado' | 'cancelado')
+      .subscribe({
+        next: () => {
+          this.cargarReservas();
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   limpiarFiltro(): void {
     this.filtroFecha = '';
+    this.cargarReservas();
+    this.cdr.detectChanges();
   }
 
   limpiarTodas(): void {
     const confirmar = confirm('¿Seguro que querés eliminar todas las reservas?');
-
     if (!confirmar) return;
 
-    this.reservasService.limpiarReservas();
-    this.filtroFecha = '';
+    const eliminaciones = this.reservas.map((r) =>
+      this.reservasApi.eliminarReserva(r.id).toPromise()
+    );
+
+    Promise.all(eliminaciones).then(() => {
+      this.cargarReservas();
+      this.cdr.detectChanges();
+    });
   }
 }

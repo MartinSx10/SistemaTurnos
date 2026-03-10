@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ReservasService } from '../../services/reservas.service';
+import { ReservasApiService, Reserva } from '../../services/reservas-api.service';
 
 @Component({
   selector: 'app-reservas',
@@ -10,7 +10,7 @@ import { ReservasService } from '../../services/reservas.service';
   templateUrl: './reservas.html',
   styleUrl: './reservas.scss',
 })
-export class Reservas {
+export class ReservasComponent {
   horarios: string[] = [
     '18:00',
     '19:00',
@@ -19,6 +19,8 @@ export class Reservas {
     '22:00',
     '23:00',
   ];
+
+  reservasDelDia: Reserva[] = [];
 
   reserva = {
     fecha: '',
@@ -29,8 +31,12 @@ export class Reservas {
 
   mensaje = '';
   error = '';
+  cargando = false;
 
-  constructor(private reservasService: ReservasService) {}
+  constructor(
+    private reservasApi: ReservasApiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   get fechaMinima(): string {
     const hoy = new Date();
@@ -52,18 +58,35 @@ export class Reservas {
     this.reserva.telefono = input.value;
   }
 
-  estaDisponible(hora: string): boolean {
-    if (!this.reserva.fecha) return true;
-    return this.reservasService.horarioDisponible(this.reserva.fecha, hora);
+  cargarReservasDelDia(): void {
+    if (!this.reserva.fecha) {
+      this.reservasDelDia = [];
+      return;
+    }
+
+    this.reservasApi.getReservas(this.reserva.fecha).subscribe({
+      next: (data) => {
+        this.reservasDelDia = data;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.error = 'No se pudo cargar la disponibilidad.';
+        this.cdr.detectChanges();
+      },
+    });
   }
 
-  onFechaChange() {
+  estaDisponible(hora: string): boolean {
+    return !this.reservasDelDia.some(
+      (r) => r.hora === hora && r.estado !== 'cancelado'
+    );
+  }
+
+  onFechaChange(): void {
     this.mensaje = '';
     this.error = '';
-
-    if (this.reserva.hora && !this.estaDisponible(this.reserva.hora)) {
-      this.reserva.hora = '';
-    }
+    this.reserva.hora = '';
+    this.cargarReservasDelDia();
   }
 
   validarFormulario(): boolean {
@@ -98,34 +121,49 @@ export class Reservas {
     return true;
   }
 
-  reservar() {
-  this.mensaje = '';
-  this.error = '';
+  reservar(): void {
+    this.mensaje = '';
+    this.error = '';
 
-  if (!this.validarFormulario()) {
-    return;
+    if (!this.validarFormulario()) return;
+
+    this.cargando = true;
+    this.cdr.detectChanges();
+
+    this.reservasApi
+      .crearReserva({
+        fecha: this.reserva.fecha,
+        hora: this.reserva.hora,
+        nombre: this.reserva.nombre.trim(),
+        telefono: this.reserva.telefono.trim(),
+        estado: 'reservado',
+      })
+      .subscribe({
+        next: () => {
+          this.mensaje = `Turno reservado para ${this.reserva.nombre} el día ${this.reserva.fecha} a las ${this.reserva.hora}.`;
+
+          this.reserva = {
+            fecha: '',
+            hora: '',
+            nombre: '',
+            telefono: '',
+          };
+
+          this.reservasDelDia = [];
+          this.cargando = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          if (err.status === 409) {
+            this.error =
+              'Ese horario ya está reservado para la fecha seleccionada.';
+          } else {
+            this.error = 'Ocurrió un error al crear la reserva.';
+          }
+
+          this.cargando = false;
+          this.cdr.detectChanges();
+        },
+      });
   }
-
-  const ok = this.reservasService.agregarReserva({
-    fecha: this.reserva.fecha,
-    hora: this.reserva.hora,
-    nombre: this.reserva.nombre.trim(),
-    telefono: this.reserva.telefono.trim(),
-    estado: 'reservado',
-  });
-
-  if (!ok) {
-    this.error = 'Ese horario ya está reservado para la fecha seleccionada.';
-    return;
-  }
-
-  this.mensaje = `Turno reservado para ${this.reserva.nombre} el día ${this.reserva.fecha} a las ${this.reserva.hora}.`;
-
-  this.reserva = {
-    fecha: '',
-    hora: '',
-    nombre: '',
-    telefono: '',
-  };
-}
 }

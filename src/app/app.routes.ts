@@ -1,12 +1,10 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home/home';
-import { Reservas } from './pages/reservas/reservas';
-import { Admin } from './pages/admin/admin';
-import { Navbar } from './components/navbar/navbar';
+import { HomeComponent } from './pages/home/home';
+import { ReservasComponent } from './pages/reservas/reservas';
+import { AdminComponent } from './pages/admin/admin';
 
 export const routes: Routes = [
-  { path: '', component: Home },
-  { path: 'reservas', component: Reservas },
-  { path: 'admin', component: Admin },
-  {path: 'navbar', component: Navbar}
+  { path: '', component: HomeComponent },
+  { path: 'reservas', component: ReservasComponent },
+  { path: 'admin', component: AdminComponent },
 ];

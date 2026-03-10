@@ -66,7 +66,9 @@
         />
       </div>
 
-      <button type="submit">Reservar</button>
+      <button type="submit" [disabled]="cargando">
+  {{ cargando ? 'Reservando...' : 'Reservar' }}
+</button>
     </form>
 
     <p class="mensaje ok" *ngIf="mensaje">
