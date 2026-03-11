@@ -1,9 +1,41 @@
 <nav class="navbar">
-  <div class="logo">TurnoCancha</div>
+  <div class="navbar-top">
+    <a class="logo" routerLink="/" (click)="cerrarMenu()">TurnoCancha</a>
 
-  <div class="links">
-    <a routerLink="/">Inicio</a>
-    <a routerLink="/reservas">Reservas</a>
-    <a routerLink="/admin">Admin</a>
+    <button
+  type="button"
+  class="menu-btn"
+  (click)="toggleMenu()"
+  [attr.aria-label]="menuAbierto ? 'Cerrar menú' : 'Abrir menú'"
+>
+  {{ menuAbierto ? '✕' : '☰' }}
+</button>
+  </div>
+
+  <div class="navbar-links" [class.abierto]="menuAbierto">
+    <a
+      routerLink="/"
+      routerLinkActive="activo"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="cerrarMenu()"
+    >
+      Inicio
+    </a>
+
+    <a
+      routerLink="/reservas"
+      routerLinkActive="activo"
+      (click)="cerrarMenu()"
+    >
+      Reservas
+    </a>
+
+    <a
+      routerLink="/admin"
+      routerLinkActive="activo"
+      (click)="cerrarMenu()"
+    >
+      Admin
+    </a>
   </div>
 </nav>

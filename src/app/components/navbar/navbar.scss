@@ -1,41 +1,104 @@
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(15, 23, 42, 0.95);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(8, 19, 53, 0.96);
+  backdrop-filter: blur(6px);
   color: white;
   padding: 1rem 1.25rem;
-  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
 }
 
-.logo {
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.links {
+.navbar-top {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
 }
 
-.links a {
+.logo {
   color: white;
   text-decoration: none;
-  font-weight: 500;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
-.links a:hover {
-  opacity: 0.85;
+.menu-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: white;
+  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: none;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  opacity: 0.95;
+  transition: 0.2s ease;
+}
+
+.navbar-links a:hover {
+  opacity: 1;
+}
+
+.navbar-links a.activo {
+  color: #a7f3d0;
+}
+
+@media (min-width: 769px) {
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 @media (max-width: 768px) {
   .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+    padding: 1rem;
   }
 
-  .links {
-    flex-wrap: wrap;
+  .logo {
+    font-size: 1.7rem;
+  }
+
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .navbar-links.abierto {
+    display: flex;
+  }
+
+  .navbar-links a {
+    padding: 0.85rem 0.25rem;
+    font-size: 1.15rem;
+    border-radius: 8px;
   }
 }
