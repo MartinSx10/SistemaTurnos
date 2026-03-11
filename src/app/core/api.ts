@@ -1,1 +1,1 @@
-export const API_URL = 'backendfutbol-production.up.railway.app/api';
+export const API_URL = 'https://backendfutbol-production.up.railway.app/api';
