@@ -13,6 +13,7 @@ import { ReservasApiService, Reserva } from '../../services/reservas-api.service
 })
 export class AdminComponent implements OnInit {
   filtroFecha = '';
+  username = 'admin';
   password = '';
   loginError = '';
   reservas: Reserva[] = [];
@@ -36,24 +37,30 @@ export class AdminComponent implements OnInit {
 
   login(): void {
     this.loginError = '';
-
-    const ok = this.authService.login(this.password);
-
-    if (!ok) {
-      this.loginError = 'Contraseña incorrecta.';
-      this.cdr.detectChanges();
-      return;
-    }
-
-    this.password = '';
-    this.cargarReservas();
+    this.cargando = true;
     this.cdr.detectChanges();
+
+    this.authService.login(this.username, this.password).subscribe({
+      next: () => {
+        this.password = '';
+        this.cargarReservas();
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.loginError = 'Usuario o contraseña incorrectos.';
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   logout(): void {
     this.authService.logout();
     this.filtroFecha = '';
     this.reservas = [];
+    this.password = '';
+    this.loginError = '';
     this.cdr.detectChanges();
   }
 

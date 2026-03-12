@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_URL } from '../core/api';
+import { AuthService } from './auth.service';
 
 export interface Reserva {
   id: number;
@@ -25,7 +26,16 @@ export interface CrearReservaDto {
 })
 export class ReservasApiService {
   private http = inject(HttpClient);
+  private authService = inject(AuthService);
   private baseUrl = `${API_URL}/reservas`;
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
 
   getReservas(fecha?: string): Observable<Reserva[]> {
     let params = new HttpParams();
@@ -34,7 +44,10 @@ export class ReservasApiService {
       params = params.set('fecha', fecha);
     }
 
-    return this.http.get<Reserva[]>(this.baseUrl, { params });
+    return this.http.get<Reserva[]>(this.baseUrl, {
+      params,
+      headers: this.getAuthHeaders(),
+    });
   }
 
   crearReserva(data: CrearReservaDto): Observable<Reserva> {
@@ -45,12 +58,16 @@ export class ReservasApiService {
     id: number,
     estado: 'reservado' | 'pagado' | 'cancelado'
   ): Observable<{ message: string }> {
-    return this.http.put<{ message: string }>(`${this.baseUrl}/${id}/estado`, {
-      estado,
-    });
+    return this.http.put<{ message: string }>(
+      `${this.baseUrl}/${id}/estado`,
+      { estado },
+      { headers: this.getAuthHeaders() }
+    );
   }
 
   eliminarReserva(id: number): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`);
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`, {
+      headers: this.getAuthHeaders(),
+    });
   }
 }
