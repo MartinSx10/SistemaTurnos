@@ -76,10 +76,44 @@ export class ReservasComponent {
     });
   }
 
+  esHoy(fecha: string): boolean {
+    return fecha === this.fechaMinima;
+  }
+
+  horarioYaPaso(hora: string): boolean {
+    if (!this.reserva.fecha || !this.esHoy(this.reserva.fecha)) {
+      return false;
+    }
+
+    const ahora = new Date();
+    const [horaTurno, minutoTurno] = hora.split(':').map(Number);
+
+    const fechaHoraTurno = new Date();
+    fechaHoraTurno.setHours(horaTurno, minutoTurno, 0, 0);
+
+    return fechaHoraTurno <= ahora;
+  }
+
   estaDisponible(hora: string): boolean {
+    if (this.horarioYaPaso(hora)) {
+      return false;
+    }
+
     return !this.reservasDelDia.some(
       (r) => r.hora === hora && r.estado !== 'cancelado'
     );
+  }
+
+  getEstadoHorario(hora: string): 'pasado' | 'ocupado' | 'libre' {
+    if (this.horarioYaPaso(hora)) {
+      return 'pasado';
+    }
+
+    const ocupado = this.reservasDelDia.some(
+      (r) => r.hora === hora && r.estado !== 'cancelado'
+    );
+
+    return ocupado ? 'ocupado' : 'libre';
   }
 
   onFechaChange(): void {
@@ -100,6 +134,11 @@ export class ReservasComponent {
 
     if (this.reserva.fecha < this.fechaMinima) {
       this.error = 'No podés reservar una fecha anterior a hoy.';
+      return false;
+    }
+
+    if (this.horarioYaPaso(this.reserva.hora)) {
+      this.error = 'No podés reservar un horario que ya pasó.';
       return false;
     }
 

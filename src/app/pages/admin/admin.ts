@@ -18,12 +18,18 @@ export class AdminComponent implements OnInit {
   loginError = '';
   reservas: Reserva[] = [];
   cargando = false;
+  mostrarPassword = false;
+
 
   constructor(
     public authService: AuthService,
     private reservasApi: ReservasApiService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  togglePassword(): void {
+  this.mostrarPassword = !this.mostrarPassword;
+}
 
   ngOnInit(): void {
     if (this.estaLogueado) {

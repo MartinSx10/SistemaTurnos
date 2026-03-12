@@ -31,12 +31,19 @@
           </option>
 
           <option
-            *ngFor="let horario of horarios"
-            [value]="horario"
-            [disabled]="!estaDisponible(horario)"
-          >
-            {{ horario }} {{ !estaDisponible(horario) ? '(ocupado)' : '' }}
-          </option>
+  *ngFor="let horario of horarios"
+  [value]="horario"
+  [disabled]="!estaDisponible(horario)"
+>
+  {{ horario }}
+  {{
+    getEstadoHorario(horario) === 'pasado'
+      ? '(no disponible)'
+      : getEstadoHorario(horario) === 'ocupado'
+      ? '(ocupado)'
+      : ''
+  }}
+</option>
         </select>
       </div>
 
