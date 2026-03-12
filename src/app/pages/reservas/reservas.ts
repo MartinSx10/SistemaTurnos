@@ -64,7 +64,7 @@ export class ReservasComponent {
       return;
     }
 
-    this.reservasApi.getReservas(this.reserva.fecha).subscribe({
+    this.reservasApi.getDisponibilidad(this.reserva.fecha).subscribe({
       next: (data) => {
         this.reservasDelDia = data;
         this.cdr.detectChanges();

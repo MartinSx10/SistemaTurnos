@@ -65,6 +65,12 @@ export class ReservasApiService {
     );
   }
 
+  getDisponibilidad(fecha: string): Observable<Reserva[]> {
+  const params = new HttpParams().set('fecha', fecha);
+
+  return this.http.get<Reserva[]>(`${this.baseUrl}/disponibilidad`, { params });
+}
+
   eliminarReserva(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`, {
       headers: this.getAuthHeaders(),
